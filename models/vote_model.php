@@ -20,6 +20,23 @@ class VoteModel {
         // Executa a query
         return $stmt->execute();
     }
+
+    public function sumVotes(){
+
+        $query = "SELECT Vote, COUNT(*) as vote_count FROM votes GROUP BY Vote";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $votes = ['yes' => 0, 'no' => 0];
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $votes[strtolower($row['Vote'])] = $row['vote_count'];
+        }
+
+        return $votes;
+
+    }
+
 }
 
 ?>

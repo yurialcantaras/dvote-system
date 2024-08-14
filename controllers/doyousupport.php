@@ -1,4 +1,8 @@
 <?php
+session_start();
+session_destroy();
+
+// Adicionar filtro para que não seja possível submeter form sem registro blockchain
 
 // Inclui os arquivos do model e da conexão
 require_once '../models/db_connection.php';
@@ -17,6 +21,10 @@ $vote = $_POST['vote'];
 
 // Insere os dados na tabela
 if ($voteModel->insertVote($hash, $vote)) {
+
+    session_start();
+    $_SESSION['summary'] = $voteModel->sumVotes();
+
     header('Location: ../success_page.php?vote='.$vote.'&hash='.$hash);
 } else {
     echo "Failed to record the vote.";
